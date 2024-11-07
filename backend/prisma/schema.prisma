@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String            @id @default(uuid())
+  email             String            @unique
+  password          String?
+  firstName         String
+  lastName          String
+  phone             String            @unique
+  dateOfBirth       DateTime
+  preferredLanguage String            @default("en")
+  isEmailVerified   Boolean           @default(false)
+  isPhoneVerified   Boolean           @default(false)
+  provider          String?           // For social login
+  providerId        String?           // For social login
+  credits           Int               @default(0)
+  role              UserRole          @default(USER)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  verifications     Verification[]
+  transactions      Transaction[]
+  feedbacks         Feedback[]
+  customPricing     CustomPricing?
+  refreshTokens     RefreshToken[]
+  emailVerification EmailVerification?
+  phoneVerification PhoneVerification?
+}
+
+model Verification {
+  id                String              @id @default(uuid())
+  userId            String
+  purpose           VerificationPurpose
+  status            VerificationStatus  @default(PENDING)
+  photoUrl          String
+  aadharFrontUrl    String
+  aadharBackUrl     String
+  digilockerData    Json?
+  criminalRecords   Json?
+  policeReport      Json?
+  location          Json?
+  additionalDetails Json?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  user              User                @relation(fields: [userId], references: [id])
+}
+
+model Transaction {
+  id          String            @id @default(uuid())
+  userId      String
+  amount      Float
+  credits     Int
+  status      TransactionStatus @default(PENDING)
+  razorpayId  String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  user        User              @relation(fields: [userId], references: [id])
+}
+
+model CustomPricing {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  pricePerCredit Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  userId    String
+  message   String
+  rating    Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model EmailVerification {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model PhoneVerification {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum VerificationPurpose {
+  TENANT
+  DOMESTIC_HELP
+  DRIVER
+  MATRIMONIAL
+  OTHER
+}
+
+enum VerificationStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
