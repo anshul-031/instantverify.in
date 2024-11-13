@@ -5,10 +5,11 @@ import { Input, Button } from '../components/forms';
 import VerificationHistory from '../components/dashboard/VerificationHistory';
 import CreditBalance from '../components/dashboard/CreditBalance';
 import RequestVerification from '../components/dashboard/RequestVerification';
+import Verification from './Verification';
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('history');
+  const [activeTab, setActiveTab] = useState('newVerification');
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -18,6 +19,8 @@ export default function Dashboard() {
         return <CreditBalance />;
       case 'request':
         return <RequestVerification />;
+      case 'newVerification':
+        return <Verification />;
       default:
         return null;
     }
@@ -55,6 +58,17 @@ export default function Dashboard() {
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8">
               <button
+                onClick={() => setActiveTab('newVerification')}
+                className={`${
+                  activeTab === 'newVerification'
+                    ? 'border-indigo-500 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm flex items-center`}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                New Verification
+              </button>
+              <button
                 onClick={() => setActiveTab('history')}
                 className={`${
                   activeTab === 'history'
@@ -91,9 +105,7 @@ export default function Dashboard() {
           </div>
 
           {/* Tab Content */}
-          <div className="mt-6">
-            {renderTabContent()}
-          </div>
+          <div className="mt-6">{renderTabContent()}</div>
         </div>
       </Container>
     </div>

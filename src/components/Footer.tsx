@@ -50,19 +50,9 @@ export default function Footer() {
 
           <div>
             <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">
-              Company
+              Legal
             </h3>
             <ul className="mt-4 space-y-4">
-              <li>
-                <Link to="/about" className="text-gray-600 hover:text-indigo-600">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-gray-600 hover:text-indigo-600">
-                  Contact
-                </Link>
-              </li>
               <li>
                 <Link to="/privacy" className="text-gray-600 hover:text-indigo-600">
                   Privacy Policy
@@ -71,6 +61,21 @@ export default function Footer() {
               <li>
                 <Link to="/terms" className="text-gray-600 hover:text-indigo-600">
                   Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link to="/cancellation" className="text-gray-600 hover:text-indigo-600">
+                  Cancellation & Refund
+                </Link>
+              </li>
+              <li>
+                <Link to="/shipping" className="text-gray-600 hover:text-indigo-600">
+                  Report Delivery
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-gray-600 hover:text-indigo-600">
+                  Contact Us
                 </Link>
               </li>
             </ul>

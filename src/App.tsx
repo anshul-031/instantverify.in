@@ -15,6 +15,10 @@ import Contact from './pages/Contact';
 import Verification from './pages/Verification';
 import Pricing from './pages/Pricing';
 import Dashboard from './pages/Dashboard';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Cancellation from './pages/Cancellation';
+import Shipping from './pages/Shipping';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { state } = useAuth();
@@ -37,6 +41,10 @@ function App() {
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/cancellation" element={<Cancellation />} />
+                <Route path="/shipping" element={<Shipping />} />
 
                 {/* Protected Routes */}
                 <Route
