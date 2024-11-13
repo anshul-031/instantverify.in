@@ -2,6 +2,12 @@ import { prisma } from '../lib/prisma';
 import { AppError } from '../middleware/errorHandler';
 import { config } from '../config';
 
+interface DigilockerData {
+  name?: string;
+  address?: string;
+  // Add other properties as needed
+}
+
 export const verificationService = {
   async deductCredits(userId: string) {
     const user = await prisma.user.findUnique({
@@ -46,9 +52,9 @@ export const verificationService = {
       status: verification.status,
       purpose: verification.purpose,
       subject: {
-        name: verification.digilockerData?.name,
-        photo: verification.photoUrl,
-        address: verification.digilockerData?.address,
+        // name: verification.digilockerData?.name,
+        // photo: verification.photoUrl,
+        // address: verification.digilockerData?.address,
       },
       documents: {
         aadhaar: {
@@ -57,7 +63,7 @@ export const verificationService = {
         },
       },
       verification: {
-        digilocker: verification.digilockerData,
+        digilocker: verification.digilockerData as DigilockerData,
         criminalRecords: verification.criminalRecords,
         policeReport: verification.policeReport,
       },

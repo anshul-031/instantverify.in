@@ -6,7 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger';
 import { errorHandler } from './middleware/errorHandler';
 import { logger } from './utils/logger';
-import routes from './routes';
+import { router } from './routes';
 import { config } from './config';
 
 const app = express();
@@ -27,7 +27,9 @@ app.use(limiter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Routes
-app.use('/api', routes);
+app.use('/api/auth', router.auth);
+app.use('/api/verification', router.verification);
+
 
 // Error handling
 app.use(errorHandler);

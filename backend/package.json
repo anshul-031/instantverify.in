@@ -10,11 +10,12 @@
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prisma": "prisma generate"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.540.0",
-    "@prisma/client": "^5.11.0",
+    "@prisma/client": "^5.22.0",
     "aws-sdk": "^2.1584.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -52,7 +53,7 @@
     "lint-staged": "^15.2.2",
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
-    "prisma": "^5.11.0",
+    "prisma": "^5.22.0",
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",

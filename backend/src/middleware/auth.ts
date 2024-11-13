@@ -35,7 +35,7 @@ export const authenticate = async (
     const decoded = jwt.verify(token, config.jwt.secret) as JwtPayload;
 
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
+      where: { id: parseInt(decoded.userId) }, // Convert userId to number
       select: { id: true, role: true },
     });
 
@@ -43,7 +43,7 @@ export const authenticate = async (
       throw new AppError(401, 'User not found');
     }
 
-    req.user = { id: user.id, role: user.role };
+    req.user = { id: user.id.toString(), role: user.role }; // Convert id to string
     next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {

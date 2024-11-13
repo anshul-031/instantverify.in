@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { authController } from '../controllers/auth';
+import { AuthController } from '../controllers/auth';
 import { validateRequest } from '../middleware/validateRequest';
 import { authSchema } from '../schemas/auth';
+import { config } from '../config';
 
 const router = Router();
+const authController = new AuthController();
 
 /**
  * @swagger
@@ -69,27 +71,6 @@ router.post(
   '/refresh-token',
   validateRequest(authSchema.refreshToken),
   authController.refreshToken
-);
-
-/**
- * @swagger
- * /auth/verify-email/{token}:
- *   get:
- *     tags: [Auth]
- *     summary: Verify email address
- *     parameters:
- *       - in: path
- *         name: token
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Email verified successfully
- */
-router.get(
-  '/verify-email/:token',
-  authController.verifyEmail
 );
 
 /**
@@ -166,6 +147,9 @@ if (config.features.socialLogin) {
   router.get('/facebook/callback', authController.facebookCallback);
   router.get('/github', authController.githubAuth);
   router.get('/github/callback', authController.githubCallback);
+
+// Route for creating a test account
+router.post('/create-test-account', authController.createTestAccount);
 }
 
 export default router;

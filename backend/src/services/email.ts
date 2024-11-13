@@ -1,44 +1,71 @@
-import nodemailer from 'nodemailer';
 import { config } from '../config';
+import nodemailer from 'nodemailer';
 
-const transporter = nodemailer.createTransport({
+interface EmailConfig {
+  host: string;
+  port: number;
+  user: string;
+  pass: string;
+  baseUrl: string; // Added baseUrl
+}
+
+const emailConfig: EmailConfig = {
   host: config.email.host,
   port: config.email.port,
-  secure: config.email.port === 465,
+  user: config.email.user,
+  pass: config.email.pass,
+  baseUrl: process.env.BASE_URL || 'http://localhost:3000', // Added baseUrl with fallback
+};
+
+const transporter = nodemailer.createTransport({
+  host: emailConfig.host,
+  port: emailConfig.port,
+  secure: false,
   auth: {
-    user: config.email.user,
-    pass: config.email.pass,
+    user: emailConfig.user,
+    pass: emailConfig.pass,
   },
 });
 
-export const emailService = {
-  async sendVerificationEmail(to: string, token: string) {
-    const verificationUrl = `${config.baseUrl}/api/auth/verify-email/${token}`;
-
+export const sendVerificationEmail = async (to: string, token: string) => {
+  try {
+    const verificationUrl = `${emailConfig.baseUrl}/verify-email?token=${token}`;
+    console.log("emailConfig.user :", emailConfig.user);
     await transporter.sendMail({
-      from: config.email.user,
+      from: emailConfig.user,
       to,
-      subject: 'Verify your email address',
+      subject: 'Verify your email',
       html: `
-        <h1>Email Verification</h1>
+        <h1>Verify your email</h1>
         <p>Please click the link below to verify your email address:</p>
         <a href="${verificationUrl}">${verificationUrl}</a>
       `,
     });
-  },
+    console.log(`Verification email sent successfully to ${to}`); // Added log statement
+  } catch (error) {
+    console.error('Error sending verification email:', error);
+  }
+};
 
-  async sendPasswordResetEmail(to: string, token: string) {
-    const resetUrl = `${config.baseUrl}/reset-password?token=${token}`;
-
+export const sendPasswordResetEmail = async (to: string, token: string) => {
+  try {
+    const resetUrl = `${emailConfig.baseUrl}/reset-password?token=${token}`;
     await transporter.sendMail({
-      from: config.email.user,
+      from: emailConfig.user,
       to,
       subject: 'Reset your password',
       html: `
-        <h1>Password Reset</h1>
+        <h1>Reset your password</h1>
         <p>Please click the link below to reset your password:</p>
         <a href="${resetUrl}">${resetUrl}</a>
       `,
     });
-  },
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+  }
+};
+
+export const emailService = {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
 };

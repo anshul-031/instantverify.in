@@ -45,4 +45,10 @@ export const authSchema = {
       password: z.string().min(8),
     }),
   }),
+
+  resendVerification: z.object({
+    body: z.object({
+      email: z.string().email(),
+    }),
+  }),
 };

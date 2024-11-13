@@ -2,26 +2,20 @@ import { Router } from 'express';
 import { verificationController } from '../controllers/verification';
 import { authenticate, authorize } from '../middleware/auth';
 import { validateRequest } from '../middleware/validateRequest';
-import { verificationSchema } from '../schemas/verification';
+//import { verificationSchema } from '../schemas/verification';
 import { upload } from '../middleware/upload';
+import { Request, Response, NextFunction } from 'express';
+
+interface VerificationController {
+  initiateVerification: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  getVerification: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  getDigilockerAuthUrl: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  handleDigilockerCallback: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  checkDigilockerStatus: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+}
 
 const router = Router();
 
-/**
- * @swagger
- * /verification/initiate:
- *   post:
- *     tags: [Verification]
- *     summary: Initiate a new verification request
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             $ref: '#/components/schemas/VerificationRequest'
- */
 router.post(
   '/initiate',
   authenticate,
@@ -30,66 +24,62 @@ router.post(
     { name: 'aadharFront', maxCount: 1 },
     { name: 'aadharBack', maxCount: 1 },
   ]),
-  validateRequest(verificationSchema.initiate),
-  verificationController.initiateVerification
+  //validateRequest(verificationSchema.initiate),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await verificationController.initiateVerification(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
-/**
- * @swagger
- * /verification/{id}:
- *   get:
- *     tags: [Verification]
- *     summary: Get verification details
- *     security:
- *       - bearerAuth: []
- */
 router.get(
   '/:id',
   authenticate,
-  validateRequest(verificationSchema.getById),
-  verificationController.getVerification
+  //validateRequest(verificationSchema.getById),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await verificationController.getVerification(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
-/**
- * @swagger
- * /verification/digilocker/auth:
- *   post:
- *     tags: [Verification]
- *     summary: Get Digilocker authentication URL
- *     security:
- *       - bearerAuth: []
- */
 router.post(
   '/digilocker/auth',
   authenticate,
-  verificationController.getDigilockerAuthUrl
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await verificationController.getDigilockerAuthUrl(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
-/**
- * @swagger
- * /verification/digilocker/callback:
- *   get:
- *     tags: [Verification]
- *     summary: Handle Digilocker callback
- */
 router.get(
   '/digilocker/callback',
-  verificationController.handleDigilockerCallback
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await verificationController.handleDigilockerCallback(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
-/**
- * @swagger
- * /verification/digilocker/status:
- *   get:
- *     tags: [Verification]
- *     summary: Check Digilocker authentication status
- *     security:
- *       - bearerAuth: []
- */
 router.get(
   '/digilocker/status',
   authenticate,
-  verificationController.checkDigilockerStatus
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await verificationController.checkDigilockerStatus(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
 export default router;
