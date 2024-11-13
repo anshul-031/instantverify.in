@@ -32,6 +32,9 @@ const envSchema = z.object({
   ENABLE_EMAIL_VERIFICATION: z.string().transform((val) => val === 'true'),
   RATE_LIMIT_WINDOW_MS: z.string().transform(Number),
   RATE_LIMIT_MAX_REQUESTS: z.string().transform(Number),
+  DIGILOCKER_CLIENT_ID: z.string(),
+  DIGILOCKER_CLIENT_SECRET: z.string(),
+  DIGILOCKER_REDIRECT_URI: z.string(),
 });
 
 const env = envSchema.parse(process.env);
@@ -86,5 +89,10 @@ export const config = {
   rateLimit: {
     windowMs: env.RATE_LIMIT_WINDOW_MS,
     maxRequests: env.RATE_LIMIT_MAX_REQUESTS,
+  },
+  digilocker: {
+    clientId: env.DIGILOCKER_CLIENT_ID,
+    clientSecret: env.DIGILOCKER_CLIENT_SECRET,
+    redirectUri: env.DIGILOCKER_REDIRECT_URI,
   },
 };

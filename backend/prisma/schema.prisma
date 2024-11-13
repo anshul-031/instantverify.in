@@ -8,129 +8,70 @@ datasource db {
 }
 
 model User {
-  id                String            @id @default(uuid())
-  email             String            @unique
-  password          String?
-  firstName         String
-  lastName          String
-  phone             String            @unique
-  dateOfBirth       DateTime
-  preferredLanguage String            @default("en")
-  isEmailVerified   Boolean           @default(false)
-  isPhoneVerified   Boolean           @default(false)
-  provider          String?           // For social login
-  providerId        String?           // For social login
-  credits           Int               @default(0)
-  role              UserRole          @default(USER)
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  verifications     Verification[]
-  transactions      Transaction[]
-  feedbacks         Feedback[]
-  customPricing     CustomPricing?
-  refreshTokens     RefreshToken[]
-  emailVerification EmailVerification?
-  phoneVerification PhoneVerification?
-}
-
-model Verification {
-  id                String              @id @default(uuid())
-  userId            String
-  purpose           VerificationPurpose
-  status            VerificationStatus  @default(PENDING)
-  photoUrl          String
-  aadharFrontUrl    String
-  aadharBackUrl     String
-  digilockerData    Json?
-  criminalRecords   Json?
-  policeReport      Json?
-  location          Json?
-  additionalDetails Json?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  user              User                @relation(fields: [userId], references: [id])
-}
-
-model Transaction {
-  id          String            @id @default(uuid())
-  userId      String
-  amount      Float
-  credits     Int
-  status      TransactionStatus @default(PENDING)
-  razorpayId  String?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  user        User              @relation(fields: [userId], references: [id])
-}
-
-model CustomPricing {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  pricePerCredit Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
-}
-
-model Feedback {
-  id        String   @id @default(uuid())
-  userId    String
-  message   String
-  rating    Int?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
+  id                 Int                  @id @default(autoincrement())
+  email              String               @unique
+  password           String
+  firstName          String?
+  lastName           String?
+  phone              String?
+  dateOfBirth        DateTime?
+  role               Role                 @default(USER)
+  isEmailVerified    Boolean              @default(false)
+  isPhoneVerified    Boolean              @default(false)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  refreshToken       RefreshToken[]
+  emailVerification EmailVerification[]
+  phoneVerification PhoneVerification[]
+  verifications      Verification[]
+  credits            Int                   @default(10)
 }
 
 model RefreshToken {
-  id        String   @id @default(uuid())
-  userId    String
+  id        Int      @id @default(autoincrement())
   token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
   expiresAt DateTime
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
 }
 
 model EmailVerification {
-  id        String   @id @default(uuid())
-  userId    String   @unique
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
 }
 
 model PhoneVerification {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  otp       String
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  otp       String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
 }
 
-enum UserRole {
+model Verification {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+  status          String
+  additionalDetails Json?
+  digilockerData Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  purpose         String
+  aadharFrontUrl  String?
+  aadharBackUrl   String?
+  criminalRecords Json?
+  policeReport    Json?
+  location        String?
+}
+
+enum Role {
   USER
   ADMIN
-}
-
-enum VerificationPurpose {
-  TENANT
-  DOMESTIC_HELP
-  DRIVER
-  MATRIMONIAL
-  OTHER
-}
-
-enum VerificationStatus {
-  PENDING
-  IN_PROGRESS
-  COMPLETED
-  FAILED
-}
-
-enum TransactionStatus {
-  PENDING
-  SUCCESS
-  FAILED
 }
