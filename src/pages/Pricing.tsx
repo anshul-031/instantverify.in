@@ -2,8 +2,10 @@ import React from 'react';
 import { Check, Mail } from 'lucide-react';
 import { Container, PageHeader } from '../components/layout';
 import { Button } from '../components/forms';
+import { useNavigate } from 'react-router-dom';
 
 export default function Pricing() {
+  const navigate = useNavigate();
   const plans = [
     {
       name: 'B2C',
@@ -95,9 +97,9 @@ export default function Pricing() {
                     className="w-full"
                     onClick={() => {
                       if (plan.cta === 'Contact Sales') {
-                        window.location.href = '/contact';
+                        navigate('/contact')
                       } else {
-                        window.location.href = '/signup';
+                        navigate('/signup')
                       }
                     }}
                   >
