@@ -77,11 +77,17 @@ export default function Pricing() {
                 </div>
               )}
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  {plan.name}
+                </h3>
                 <p className="mt-2 text-gray-500">{plan.description}</p>
                 <p className="mt-8">
-                  <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                  {plan.price !== 'Custom' && <span className="text-gray-500">/month</span>}
+                  <span className="text-4xl font-bold text-gray-900">
+                    {plan.price}
+                  </span>
+                  {plan.price !== 'Custom' && (
+                    <span className="text-gray-500">/month</span>
+                  )}
                 </p>
                 <ul className="mt-6 space-y-4">
                   {plan.features.map((feature) => (
@@ -97,9 +103,9 @@ export default function Pricing() {
                     className="w-full"
                     onClick={() => {
                       if (plan.cta === 'Contact Sales') {
-                        navigate('/contact')
+                        navigate('/contact');
                       } else {
-                        navigate('/signup')
+                        navigate('/signup');
                       }
                     }}
                   >
@@ -122,7 +128,7 @@ export default function Pricing() {
             Contact our sales team for custom pricing and enterprise solutions
           </p>
           <div className="mt-8">
-            <Button onClick={() => window.location.href = '/contact'}>
+            <Button onClick={() => (window.location.href = '/contact')}>
               <Mail className="h-4 w-4 mr-2" />
               Contact Sales
             </Button>

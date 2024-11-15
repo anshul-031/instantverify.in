@@ -15,11 +15,15 @@ export interface AuthState {
   token: string | null;
 }
 
+export type VerificationType = 'AADHAAR_OTP' | 'DL_AADHAAR_OTP' | 'VOTER_AADHAAR_OTP' | 'DL_ONLY' | 'VOTER_ONLY';
+
 export interface VerificationRequest {
   purpose: 'TENANT' | 'DOMESTIC_HELP' | 'DRIVER' | 'MATRIMONIAL' | 'OTHER';
+  verificationType: VerificationType;
   photo: string;
-  aadharFront: string;
-  aadharBack: string;
+  aadhaarNumber?: string;
+  drivingLicense?: string;
+  voterId?: string;
   additionalDetails?: Record<string, string>;
 }
 
@@ -35,8 +39,9 @@ export interface VerificationReport {
   };
   userProvidedData: {
     photo: string;
-    aadharFront: string;
-    aadharBack: string;
+    aadhaarNumber?: string;
+    drivingLicense?: string;
+    voterId?: string;
   };
   verificationResult: {
     photoMatch: boolean;
